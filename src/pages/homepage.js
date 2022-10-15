@@ -1,6 +1,9 @@
 import products from "../api/products.js";
+import categories from "../api/categories.js";
 
 function loadData() {
+  const categoriesDropdown = document.querySelector("div#categoriesMenu");
+
   const element = document.querySelector("div#div");
 
   products().then((posts) => {
@@ -8,6 +11,13 @@ function loadData() {
     const template = getTemplate(posts.data);
 
     element.innerHTML = template;
+  });
+
+  categories().then((categoriesData) => {
+    console.log("Categories: ", categoriesData.data);
+    const template = getCategoryMenu(categoriesData.data);
+
+    categoriesDropdown.innerHTML = template;
   });
 }
 
@@ -27,11 +37,24 @@ function getTemplate(posts) {
     </table>`;
 }
 
+function getCategoryMenu(categories) {
+  const data = categories.map(categoriesView).join("");
+
+  return `${data} `;
+}
+
 function postToRowView(post) {
   return `<t>
       <td>${post.name}</td>
       <td>${post.price}</td>
     </tr>`;
+}
+
+function categoriesView(category) {
+  return `
+    <div>${category.name}</div>
+    
+    `;
 }
 
 loadData();

@@ -40,6 +40,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="tailwind.config.js"></script>
+    <script src="src/pages/homepage.js" type="module"></script>
   </head>
   <body class="m">
     <header>
@@ -109,9 +110,12 @@
                     >TIENDA</a
                   >
                   <div
-                    class="opacity-0 dropdown-content absolute mt-10 group-hover:opacity-100 bg-headerYellow z-[10] left-0 w-[100%] duration-300"
+                    class="opacity-0 dropdown-content absolute mt-10 group-hover:opacity-100 bg-headerYellow -z[10] left-0 w-[100%] duration-300"
                   >
-                    ssds sdsd sdsd
+                    <div
+                      class="dropdown-box gap-4 justify-center py-4 hidden group-hover:flex"
+                      id="categoriesMenu"
+                    ></div>
                   </div>
                 </li>
 
@@ -134,8 +138,25 @@
     </header>
 
     <main class="max-w-5xl m-auto">
-      <div class="div min-h-screen" id="div"></div>
-      <script src="src/pages/homepage.js" type="module"></script>
+      <div
+        class="title font-poppins font-bold uppercase text-center py-4 text-2xl"
+      >
+        <h2>Nuestra colección</h2>
+      </div>
+
+      <div class="store-content flex">
+        <div class="filters">
+          <div>
+            <select class="form-select" aria-label="Default select example">
+              <option selected>Open this select menu</option>
+              <option value="1">One</option>
+              <option value="2">Two</option>
+              <option value="3">Three</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <!-- <script src="src/pages/homepage.js" type="module"></script> -->
     </main>
   </body>
 </html>
