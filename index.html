@@ -113,7 +113,7 @@
                     class="opacity-0 dropdown-content absolute mt-10 group-hover:opacity-100 bg-headerYellow -z[10] left-0 w-[100%] duration-300"
                   >
                     <div
-                      class="dropdown-box gap-4 justify-center py-4 hidden group-hover:flex"
+                      class="dropdown-box gap-4 justify-center py-4 flex"
                       id="categoriesMenu"
                     ></div>
                   </div>
@@ -145,15 +145,59 @@
       </div>
 
       <div class="store-content flex">
-        <div class="filters">
+        <div class="filters font-poppins flex flex-col gap-5">
           <div>
-            <select class="form-select" aria-label="Default select example">
-              <option selected>Open this select menu</option>
-              <option value="1">One</option>
-              <option value="2">Two</option>
-              <option value="3">Three</option>
+            <form class="form-inline my-2 my-lg-0">
+              <input
+                class="form-control mr-sm-2 text-sm border-headerGreen border-2"
+                type="search"
+                placeholder="Buscar"
+                aria-label="Buscar"
+              />
+              <button
+                class="btn btn-outline-success my-2 my-sm-0 hover:bg-black group border-headerGreen border-2"
+                type="submit"
+              >
+                <div><i class="fa-solid fa-magnifying-glass"></i></div>
+              </button>
+            </form>
+          </div>
+
+          <div>
+            <h4 class="pb-2">Ordenar por</h4>
+            <select
+              class="form-select text-xs py-2 px-1 w-[100%]"
+              aria-label="Default select "
+            >
+              <option selected value="1">Alfabeticamente, A-Z</option>
+              <option value="2">Alfabeticamente, Z-A</option>
+
+              <option value="3">Precio, menor a mayor</option>
+              <option value="4">Precio, mayor a menor</option>
+
+              <option value="5">Descuento, menor a mayor</option>
+              <option value="6">Descuento, mayor a menor</option>
             </select>
           </div>
+
+          <div class="">
+            <h4 class="pb-2">Categorias</h4>
+
+            <div class="categoriesMenu text-sm font-poppins capitalize"></div>
+          </div>
+        </div>
+
+        <div class="products grid grid-cols-4 gap-4 w-[100%] md:grid-cols-3">
+          <div class="product-box">
+            <div class="image-wrapper">
+              <img
+                src="https://dojiw2m9tvv09.cloudfront.net/11132/product/misterbig3308256.jpg"
+              />
+            </div>
+          </div>
+          <div>d</div>
+          <div>d</div>
+          <div>d</div>
         </div>
       </div>
       <!-- <script src="src/pages/homepage.js" type="module"></script> -->

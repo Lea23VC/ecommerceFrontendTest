@@ -3,7 +3,8 @@ import categories from "../api/categories.js";
 
 function loadData() {
   const categoriesDropdown = document.querySelector("div#categoriesMenu");
-
+  const categoriesMenu = document.querySelectorAll(".categoriesMenu");
+  console.log(categoriesMenu);
   const element = document.querySelector("div#div");
 
   products().then((posts) => {
@@ -18,6 +19,12 @@ function loadData() {
     const template = getCategoryMenu(categoriesData.data);
 
     categoriesDropdown.innerHTML = template;
+
+    categoriesMenu.forEach((item) => {
+      console.log("Item: ", item);
+      const template = getCategoryMenu(categoriesData.data);
+      item.innerHTML = template;
+    });
   });
 }
 
