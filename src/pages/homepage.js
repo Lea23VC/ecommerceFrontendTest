@@ -117,12 +117,12 @@ function loadData(search_params = null) {
   const element = document.querySelector(".products");
 
   products(search_params ? search_params : getParams()).then((posts) => {
-    console.log("Posts: ", posts.data);
+    console.log("Posts: ", posts);
     const template = getTemplate(posts);
 
     element.innerHTML = template;
 
-    paginationRefresh();
+    paginationRefresh(posts.meta.current_page);
   });
 
   categories().then((categoriesData) => {
@@ -145,28 +145,44 @@ function getTemplate(posts) {
 
   return `${rows}
 
-  <div class="col-span-full justify-self-center	">${
+  <div class="col-span-full justify-self-center">${
     rows ? getPagination(posts) : `<h3> No hay resultados</h3>`
   }</div>
  
   `;
 }
 
+function getLabel(label) {
+  switch (label) {
+    case "&laquo; Previous":
+      return "Anterior";
+    case "Next &raquo;":
+      return "Siguiente";
+    default:
+      return label;
+  }
+}
+
 function getPagination(products) {
-  const links = products.meta.links.map((link) => {
-    const urlParams = getParams();
+  const links = products.meta.links
+    .map((link) => {
+      const urlParams = getParams();
+      console.log("label: ", link.label);
 
-    urlParams.set("page", link.url && link.label);
+      urlParams.set("page", link.url && link.label);
 
-    return (
-      link.url &&
-      `<li class="page-item ${
-        link.active && `font-bold`
-      } "><a class="page-link cursor-pointer hover:no-underline ${
-        link.active && `text-pink`
-      }" >${link.label}</a></li>`
-    );
-  });
+      return (
+        link.url &&
+        `<li class="page-item ${
+          link.active && `font-bold`
+        } "><a class="page-link cursor-pointer hover:no-underline ${
+          link.active && `text-pink`
+        }" >${getLabel(link.label)}</a></li>`
+      );
+    })
+    .filter(Boolean)
+    .toString()
+    .replaceAll(",", "");
 
   console.log("links map: ", links);
 
@@ -189,6 +205,11 @@ function getCategoryMenu(categories) {
 
 function postToRowView(product) {
   console.log(product);
+
+  const discount = product.discount
+    ? `<div class="inline-block absolute bg-pink inset-0 w-[40px] h-[40px] p-2 rounded-full grid place-items-center left-auto" ><h6 class="text-xs text-white font-bold">${product.discount}%</h6></div>`
+    : "";
+
   const price =
     product.discount == 0
       ? "$" + product.price
@@ -197,7 +218,7 @@ function postToRowView(product) {
         }</span>`;
 
   return `         <div
-  class="product-box border-softPink border-2 flex justify-start p-2 flex-col gap-2"
+  class="product-box border-softPink border-2 flex justify-start p-2 flex-col gap-2 relative"
 >
   <div class="image-wrapper aspect-square">
     <img
@@ -218,8 +239,9 @@ function postToRowView(product) {
 
   <div class="product-details text-center py-4">
     <h4 class="text-base">${product.name}</h4>
-
     <h5 class="text-sm font-bold">${price}</h5>
+    ${discount}
+
   </div>
 </div>`;
 }
@@ -233,16 +255,29 @@ function categoriesView(category) {
     `;
 }
 
-function paginationRefresh() {
+function paginationRefresh(current_page) {
+  console.log("current page: ", current_page);
   console.log(params);
   var hrefs = document.getElementsByClassName("page-item");
   for (var i = 0; i < hrefs.length; i++) {
     hrefs.item(i).addEventListener("click", function (e) {
       e.preventDefault(); /*use if you want to prevent the original link following action*/
-      params.set("page", e.target.text);
+      params.set("page", getPaginationValue(current_page, e.target.text));
       getActivityIndicator();
       loadData(params);
     });
+  }
+}
+
+function getPaginationValue(current_page, value) {
+  switch (value) {
+    case "Anterior":
+      return current_page - 1;
+    case "Siguiente":
+      return current_page + 1;
+
+    default:
+      return value;
   }
 }
 
