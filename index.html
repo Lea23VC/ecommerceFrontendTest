@@ -106,11 +106,13 @@
             <div>
               <ul class="nav nav-pills flex gap-4">
                 <li class="flex group">
-                  <a href="/pages/contact-us" class="header-link alt-focus"
+                  <a
+                    href="/pages/contact-us"
+                    class="header-link alt-focus group-hover:text-pink"
                     >TIENDA</a
                   >
                   <div
-                    class="opacity-0 dropdown-content absolute mt-10 group-hover:opacity-100 bg-headerYellow -z[10] left-0 w-[100%] duration-300"
+                    class="opacity-0 dropdown-content absolute mt-10 group-hover:opacity-100 bg-headerYellow left-0 w-[100%] duration-300"
                   >
                     <div
                       class="dropdown-box gap-4 justify-center py-4 flex"
@@ -137,34 +139,35 @@
       </div>
     </header>
 
-    <main class="max-w-5xl m-auto">
+    <main class="max-w-5xl m-auto px-4">
       <div
         class="title font-poppins font-bold uppercase text-center py-4 text-2xl"
       >
         <h2>Nuestra colección</h2>
       </div>
 
-      <div class="store-content flex">
+      <div class="store-content flex gap-4">
         <div class="filters font-poppins flex flex-col gap-5">
           <div>
-            <form class="form-inline my-2 my-lg-0">
+            <form class="form-inline flex flex-row" id="frmSubmit">
               <input
-                class="form-control mr-sm-2 text-sm border-headerGreen border-2"
+                class="form-control mr-sm-2 text-sm border-softPink border-2 w-[60%]"
                 type="search"
                 placeholder="Buscar"
                 aria-label="Buscar"
+                id="search-keywords"
               />
               <button
                 class="btn btn-outline-success my-2 my-sm-0 hover:bg-black group border-headerGreen border-2"
                 type="submit"
               >
-                <div><i class="fa-solid fa-magnifying-glass"></i></div>
+                <i class="fa-solid fa-magnifying-glass"></i>
               </button>
             </form>
           </div>
 
           <div>
-            <h4 class="pb-2">Ordenar por</h4>
+            <h4 class="pb-2 font-bold">Ordenar por</h4>
             <select
               class="form-select text-xs py-2 px-1 w-[100%]"
               aria-label="Default select "
@@ -181,7 +184,7 @@
           </div>
 
           <div class="">
-            <h4 class="pb-2">Categorias</h4>
+            <h4 class="pb-2 font-bold">Categorias</h4>
 
             <div class="categoriesMenu text-sm font-poppins capitalize"></div>
           </div>
@@ -189,164 +192,7 @@
 
         <div
           class="products grid lg:grid-cols-3 gap-4 w-[100%] md:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1"
-        >
-          <div
-            class="product-box border-softPink border-2 flex justify-center p-2 flex-col gap-2"
-          >
-            <div class="image-wrapper">
-              <img
-                class="w-[100%] h-auto"
-                src="https://dojiw2m9tvv09.cloudfront.net/11132/product/misterbig3308256.jpg"
-              />
-            </div>
-
-            <div class="button-product">
-              <a href="#">
-                <button
-                  class="w-[100%] bg-black text-white p-2 hover:bg-pink duration-300"
-                >
-                  Añadir al carro
-                </button>
-              </a>
-            </div>
-
-            <div class="product-details text-center py-4">
-              <h4 class="text-base">ENERGETICA MR BIG</h4>
-
-              <h5 class="text-sm font-bold">$10.000</h5>
-            </div>
-          </div>
-          <div
-            class="product-box border-softPink border-2 flex justify-center p-2 flex-col gap-2"
-          >
-            <div class="image-wrapper">
-              <img
-                class="w-[100%] h-auto"
-                src="https://dojiw2m9tvv09.cloudfront.net/11132/product/misterbig3308256.jpg"
-              />
-            </div>
-
-            <div class="button-product">
-              <a href="#">
-                <button
-                  class="w-[100%] bg-black text-white p-2 hover:bg-pink duration-300"
-                >
-                  Añadir al carro
-                </button>
-              </a>
-            </div>
-
-            <div class="product-details text-center py-4">
-              <h4 class="text-base">ENERGETICA MR BIG</h4>
-
-              <h5 class="text-sm">$10.000</h5>
-            </div>
-          </div>
-          <div
-            class="product-box border-softPink border-2 flex justify-center p-2 flex-col gap-2"
-          >
-            <div class="image-wrapper">
-              <img
-                class="w-[100%] h-auto"
-                src="https://dojiw2m9tvv09.cloudfront.net/11132/product/misterbig3308256.jpg"
-              />
-            </div>
-
-            <div class="button-product">
-              <a href="#">
-                <button
-                  class="w-[100%] bg-black text-white p-2 hover:bg-pink duration-300"
-                >
-                  Añadir al carro
-                </button>
-              </a>
-            </div>
-
-            <div class="product-details text-center py-4">
-              <h4 class="text-base">ENERGETICA MR BIG</h4>
-
-              <h5 class="text-sm">$10.000</h5>
-            </div>
-          </div>
-          <div
-            class="product-box border-softPink border-2 flex justify-center p-2 flex-col gap-2"
-          >
-            <div class="image-wrapper">
-              <img
-                class="w-[100%] h-auto"
-                src="https://dojiw2m9tvv09.cloudfront.net/11132/product/misterbig3308256.jpg"
-              />
-            </div>
-
-            <div class="button-product">
-              <a href="#">
-                <button
-                  class="w-[100%] bg-black text-white p-2 hover:bg-pink duration-300"
-                >
-                  Añadir al carro
-                </button>
-              </a>
-            </div>
-
-            <div class="product-details text-center py-4">
-              <h4 class="text-base">ENERGETICA MR BIG</h4>
-
-              <h5 class="text-sm">$10.000</h5>
-            </div>
-          </div>
-          <div
-            class="product-box border-softPink border-2 flex justify-center p-2 flex-col gap-2"
-          >
-            <div class="image-wrapper">
-              <img
-                class="w-[100%] h-auto"
-                src="https://dojiw2m9tvv09.cloudfront.net/11132/product/misterbig3308256.jpg"
-              />
-            </div>
-
-            <div class="button-product">
-              <a href="#">
-                <button
-                  class="w-[100%] bg-black text-white p-2 hover:bg-pink duration-300"
-                >
-                  Añadir al carro
-                </button>
-              </a>
-            </div>
-
-            <div class="product-details text-center py-4">
-              <h4 class="text-base">ENERGETICA MR BIG</h4>
-
-              <h5 class="text-sm">$10.000</h5>
-            </div>
-          </div>
-          <div
-            class="product-box border-softPink border-2 flex justify-center p-2 flex-col gap-2"
-          >
-            <div class="image-wrapper">
-              <img
-                class="w-[100%] h-auto"
-                src="https://dojiw2m9tvv09.cloudfront.net/11132/product/misterbig3308256.jpg"
-              />
-            </div>
-
-            <div class="button-product">
-              <a href="#">
-                <button
-                  class="w-[100%] bg-black text-white p-2 hover:bg-pink duration-300"
-                >
-                  Añadir al carro
-                </button>
-              </a>
-            </div>
-
-            <div class="product-details text-center py-4">
-              <h4 class="text-base">ENERGETICA MR BIG</h4>
-
-              <h5 class="text-sm">$10.000</h5>
-            </div>
-          </div>
-        </div>
+        ></div>
       </div>
       <!-- <script src="src/pages/homepage.js" type="module"></script> -->
     </main>
