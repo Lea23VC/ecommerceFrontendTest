@@ -31,12 +31,42 @@ window.onload = function () {
 
   select.addEventListener("change", function handleChange(event) {
     console.log(JSON.parse(event.target.value)); // 👉️ get selected VALUE
-
     const params = getParams();
+
+    switch (JSON.parse(event.target.value)) {
+      case 0:
+        params.delete("products_by_name_order");
+        params.delete("products_by_price_order");
+        params.delete("products_by_discount_order");
+
+        getActivityIndicator();
+        loadData(params);
+
+      case 1:
+        // code block
+        params.set("products_by_name_order", "asc");
+        getActivityIndicator();
+        loadData(params);
+        break;
+      case 2:
+        // code block
+        break;
+      default:
+      // code block
+    }
 
     // window.location.search = `&${params}`;
   });
 };
+
+function getActivityIndicator() {
+  const element = document.querySelector(".products");
+
+  element.innerHTML = `<div class="col-span-full flex justify-center">
+  <div
+    class="activity border-t-8 border-8 border-lightGrey border-t-pink w-[120px] h-[120px] rounded-full animate-spin justify-center"
+  ></div>`;
+}
 
 function getParams() {
   const queryString = window.location.search;
@@ -54,18 +84,20 @@ function replaceTitleWithSearch(title_data) {
   title.innerHTML = `<h2>Resultados de: ${title_data} </h2>`;
 }
 
-function loadData() {
+function loadData(search_params = null) {
   const categoriesDropdown = document.querySelector("div#categoriesMenu");
   const categoriesMenu = document.querySelectorAll(".categoriesMenu");
 
   console.log(categoriesMenu);
   const element = document.querySelector(".products");
 
-  products(getParams()).then((posts) => {
+  products(search_params ? search_params : getParams()).then((posts) => {
     console.log("Posts: ", posts.data);
     const template = getTemplate(posts);
 
     element.innerHTML = template;
+
+    paginationRefresh();
   });
 
   categories().then((categoriesData) => {
@@ -105,9 +137,9 @@ function getPagination(products) {
       link.url &&
       `<li class="page-item ${
         link.active && `font-bold`
-      } "><a class="page-link  hover:no-underline ${
+      } "><a class="page-link hover:no-underline ${
         link.active && `text-pink`
-      }" href="?${urlParams}">${link.label}</a></li>`
+      }" >${link.label}</a></li>`
     );
   });
 
@@ -174,6 +206,20 @@ function categoriesView(category) {
   } " >${category.name}</div></a>
     
     `;
+}
+
+function paginationRefresh() {
+  const params = getParams();
+  console.log("eeee");
+  var hrefs = document.getElementsByClassName("page-item");
+  for (var i = 0; i < hrefs.length; i++) {
+    hrefs.item(i).addEventListener("click", function (e) {
+      e.preventDefault(); /*use if you want to prevent the original link following action*/
+      params.set("page", e.target.text);
+      getActivityIndicator();
+      loadData(params);
+    });
+  }
 }
 
 loadData();
