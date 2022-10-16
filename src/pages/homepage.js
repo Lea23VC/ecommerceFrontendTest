@@ -1,27 +1,57 @@
 import products from "../api/products.js";
 import categories from "../api/categories.js";
 
-window.onload = function () {
-  document.getElementById("frmSubmit").onsubmit = function onSubmit(form) {
+function searchByName() {
+  const select = document.getElementById("form-button");
+  console.log("select: ", select);
+
+  select.addEventListener("click", function handlerClick(event) {
+    // window.location.search = `&${params}`;
     var isValid = false;
     //validate your elems here
     var search = document.getElementById("search-keywords");
+    console.log("eee");
+
+    const params = getParams();
 
     if (search.value == "") {
       alert("Ingrese algún valor para buscar");
       return false;
     } else {
       //you are good to go
-      window.location.search = `&name=${search.value}`;
-      return false;
+      params.set("name", search.value);
+      window.location.search = `&${params}`;
+      loadData();
     }
-  };
+  });
+}
+
+window.onload = function () {
+  const select = document.getElementById("form-select");
+
+  select.addEventListener("change", function handleChange(event) {
+    console.log(JSON.parse(event.target.value)); // 👉️ get selected VALUE
+
+    const params = getParams();
+
+    // window.location.search = `&${params}`;
+  });
 };
 
 function getParams() {
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
+
+  if (urlParams.get("name")) {
+    replaceTitleWithSearch(urlParams.get("name"));
+  }
+
   return urlParams;
+}
+
+function replaceTitleWithSearch(title_data) {
+  const title = document.querySelector(".title");
+  title.innerHTML = `<h2>Resultados de: ${title_data} </h2>`;
 }
 
 function loadData() {
@@ -58,15 +88,26 @@ function getTemplate(posts) {
 
   return `${rows}
 
-  ${getPagination(posts)}
+  <div class="col-span-full justify-self-center	">${
+    rows ? getPagination(posts) : `<h3> No hay resultados</h3>`
+  }</div>
+ 
   `;
 }
 
 function getPagination(products) {
   const links = products.meta.links.map((link) => {
+    const urlParams = getParams();
+
+    urlParams.set("page", link.url && link.label);
+
     return (
       link.url &&
-      `<li class="page-item"><a class="page-link" href="#">${link.label}</a></li>`
+      `<li class="page-item ${
+        link.active && `font-bold`
+      } "><a class="page-link ${
+        link.active && `text-pink`
+      }" href="?${urlParams}">${link.label}</a></li>`
     );
   });
 
@@ -80,7 +121,11 @@ function getPagination(products) {
 }
 
 function getCategoryMenu(categories) {
-  const data = categories.map(categoriesView).join("");
+  const all = `<a href="/" ><div class="${
+    !getParams().get("category") && "font-bold text-pink"
+  } " >Todo</div></a>`;
+
+  const data = all + categories.map(categoriesView).join("");
 
   return `${data} `;
 }
@@ -132,3 +177,4 @@ function categoriesView(category) {
 }
 
 loadData();
+searchByName();

@@ -149,16 +149,21 @@
       <div class="store-content flex gap-4">
         <div class="filters font-poppins flex flex-col gap-5">
           <div>
-            <form class="form-inline flex flex-row" id="frmSubmit">
+            <form
+              class="form-inline flex flex-row"
+              id="frmSubmit"
+              onsubmit="return false"
+            >
               <input
-                class="form-control mr-sm-2 text-sm border-softPink border-2 w-[60%]"
+                class="form-control text-sm border-softPink border-2 w-[50%]"
                 type="search"
                 placeholder="Buscar"
                 aria-label="Buscar"
                 id="search-keywords"
               />
               <button
-                class="btn btn-outline-success my-2 my-sm-0 hover:bg-black group border-headerGreen border-2"
+                id="form-button"
+                class="btn btn-outline-success my-2 my-sm-0 hover:bg-black group border-headerGreen border-2 w-[100%]"
                 type="submit"
               >
                 <i class="fa-solid fa-magnifying-glass"></i>
@@ -170,9 +175,13 @@
             <h4 class="pb-2 font-bold">Ordenar por</h4>
             <select
               class="form-select text-xs py-2 px-1 w-[100%]"
-              aria-label="Default select "
+              aria-label="Default select"
+              id="form-select"
             >
-              <option selected value="1">Alfabeticamente, A-Z</option>
+              <option value=" {} " selected>Sin orden</option>
+              <option value=' { "products_by_price_order" : "asc" } '>
+                Alfabeticamente, A-Z
+              </option>
               <option value="2">Alfabeticamente, Z-A</option>
 
               <option value="3">Precio, menor a mayor</option>
@@ -186,7 +195,7 @@
           <div class="">
             <h4 class="pb-2 font-bold">Categorias</h4>
 
-            <div class="categoriesMenu text-sm font-poppins capitalize"></div>
+            <div class="categoriesMenu capitalize"></div>
           </div>
         </div>
 
