@@ -1,6 +1,8 @@
 import products from "../api/products.js";
 import categories from "../api/categories.js";
 
+const params = getParams();
+
 function searchByName() {
   const select = document.getElementById("form-button");
   console.log("select: ", select);
@@ -12,18 +14,28 @@ function searchByName() {
     var search = document.getElementById("search-keywords");
     console.log("eee");
 
-    const params = getParams();
-
     if (search.value == "") {
       alert("Ingrese algún valor para buscar");
       return false;
     } else {
       //you are good to go
       params.set("name", search.value);
-      window.location.search = `&${params}`;
-      loadData();
+      // window.location.search = `&${params}`;
+      getActivityIndicator();
+      replaceTitleWithSearch(search.value);
+      loadData(params);
     }
   });
+}
+
+function clearOrder() {
+  params.delete("products_by_name_order");
+  params.delete("products_by_price_order");
+  params.delete("products_by_discount_order");
+}
+
+function clearPage() {
+  params.delete("page");
 }
 
 window.onload = function () {
@@ -31,29 +43,42 @@ window.onload = function () {
 
   select.addEventListener("change", function handleChange(event) {
     console.log(JSON.parse(event.target.value)); // 👉️ get selected VALUE
-    const params = getParams();
-
+    // const params = getParams();
+    clearPage();
+    clearOrder();
     switch (JSON.parse(event.target.value)) {
       case 0:
-        params.delete("products_by_name_order");
-        params.delete("products_by_price_order");
-        params.delete("products_by_discount_order");
-
-        getActivityIndicator();
-        loadData(params);
+        break;
 
       case 1:
         // code block
         params.set("products_by_name_order", "asc");
-        getActivityIndicator();
-        loadData(params);
         break;
       case 2:
+        params.set("products_by_name_order", "desc");
         // code block
         break;
+
+      case 3:
+        params.set("products_by_price_order", "asc");
+        break;
+      case 4:
+        params.set("products_by_price_order", "desc");
+        break;
+
+      case 5:
+        params.set("products_by_discount_order", "asc");
+        break;
+
+      case 6:
+        params.set("products_by_discount_order", "desc");
+        break;
+
       default:
       // code block
     }
+    getActivityIndicator();
+    loadData(params);
 
     // window.location.search = `&${params}`;
   });
@@ -72,9 +97,9 @@ function getParams() {
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
 
-  if (urlParams.get("name")) {
-    replaceTitleWithSearch(urlParams.get("name"));
-  }
+  // if (urlParams.get("name")) {
+  //   replaceTitleWithSearch(urlParams.get("name"));
+  // }
 
   return urlParams;
 }
@@ -137,7 +162,7 @@ function getPagination(products) {
       link.url &&
       `<li class="page-item ${
         link.active && `font-bold`
-      } "><a class="page-link hover:no-underline ${
+      } "><a class="page-link cursor-pointer hover:no-underline ${
         link.active && `text-pink`
       }" >${link.label}</a></li>`
     );
@@ -209,8 +234,7 @@ function categoriesView(category) {
 }
 
 function paginationRefresh() {
-  const params = getParams();
-  console.log("eeee");
+  console.log(params);
   var hrefs = document.getElementsByClassName("page-item");
   for (var i = 0; i < hrefs.length; i++) {
     hrefs.item(i).addEventListener("click", function (e) {
