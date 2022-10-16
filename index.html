@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <script src="https://cdn.tailwindcss.com"></script>
     <base href="/" />
     <title>DOM</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -9,10 +10,11 @@
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;900&display=swap"
       rel="stylesheet"
     />
+
     <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
-      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi"
       crossorigin="anonymous"
     />
     <script
@@ -37,8 +39,9 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
+    <link rel="stylesheet" href="styles.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="https://cdn.tailwindcss.com"></script>
+
     <script src="tailwind.config.js"></script>
     <script src="src/pages/homepage.js" type="module"></script>
   </head>
@@ -112,7 +115,7 @@
                     >TIENDA</a
                   >
                   <div
-                    class="opacity-0 dropdown-content absolute mt-10 group-hover:opacity-100 bg-headerYellow left-0 w-[100%] duration-300"
+                    class="opacity-0 dropdown-content absolute mt-8 group-hover:opacity-100 bg-headerYellow left-0 w-[100%] duration-300"
                   >
                     <div
                       class="dropdown-box gap-4 justify-center py-4 flex"
@@ -146,7 +149,7 @@
         <h2>Nuestra colección</h2>
       </div>
 
-      <div class="store-content flex gap-4">
+      <div class="store-content flex gap-4 flex-col sm:flex-row">
         <div class="filters font-poppins flex flex-col gap-5">
           <div>
             <form
@@ -155,7 +158,7 @@
               onsubmit="return false"
             >
               <input
-                class="form-control text-sm border-softPink border-2 w-[50%]"
+                class="form-control text-sm border-softPink border-2 border-r-none"
                 type="search"
                 placeholder="Buscar"
                 aria-label="Buscar"
@@ -163,7 +166,7 @@
               />
               <button
                 id="form-button"
-                class="btn btn-outline-success my-2 my-sm-0 hover:bg-black group border-headerGreen border-2 w-[100%]"
+                class="btn btn-outline-success hover:bg-black group border-headerGreen border-2"
                 type="submit"
               >
                 <i class="fa-solid fa-magnifying-glass"></i>
@@ -200,7 +203,7 @@
         </div>
 
         <div
-          class="products grid lg:grid-cols-3 gap-4 w-[100%] md:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1"
+          class="products grid lg:grid-cols-3 gap-4 w-[100%] md:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1 min-h-[70vh]"
         >
           <div class="col-span-full flex justify-center">
             <div

@@ -105,7 +105,7 @@ function getPagination(products) {
       link.url &&
       `<li class="page-item ${
         link.active && `font-bold`
-      } "><a class="page-link ${
+      } "><a class="page-link  hover:no-underline ${
         link.active && `text-pink`
       }" href="?${urlParams}">${link.label}</a></li>`
     );
