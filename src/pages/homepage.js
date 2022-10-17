@@ -1,62 +1,48 @@
 import products from "../api/products.js";
 import categories from "../api/categories.js";
+import { getParams, clearOrder, clearPage } from "../utils/paramsUtils.js";
 
+//obtain parameters from get request
 const params = getParams();
 
 function searchByName() {
+  //get search form
   const select = document.getElementById("form-button");
-  console.log("select: ", select);
-
   select.addEventListener("click", function handlerClick(event) {
-    // window.location.search = `&${params}`;
-    var isValid = false;
-    //validate your elems here
     var search = document.getElementById("search-keywords");
-    console.log("eee");
-
     if (search.value == "") {
       alert("Ingrese algún valor para buscar");
       return false;
     } else {
-      //you are good to go
+      //set name filters in search parameters
       params.set("name", search.value);
-      // window.location.search = `&${params}`;
-      getActivityIndicator();
       replaceTitleWithSearch(search.value);
-      loadData(params);
+
+      //load data
+      loadData();
     }
   });
 }
 
-function clearOrder() {
-  params.delete("products_by_name_order");
-  params.delete("products_by_price_order");
-  params.delete("products_by_discount_order");
-}
-
-function clearPage() {
-  params.delete("page");
-}
-
 window.onload = function () {
+  //get select dropdown
   const select = document.getElementById("form-select");
 
+  //add listener everytime the dropdown changes
   select.addEventListener("change", function handleChange(event) {
-    console.log(JSON.parse(event.target.value)); // 👉️ get selected VALUE
-    // const params = getParams();
-    clearPage();
-    clearOrder();
+    //for every option, the page and the order options are deleted
+    //every options adds a order filter to the query
+    clearPage(params);
+    clearOrder(params);
     switch (JSON.parse(event.target.value)) {
       case 0:
         break;
-
       case 1:
-        // code block
         params.set("products_by_name_order", "asc");
         break;
       case 2:
         params.set("products_by_name_order", "desc");
-        // code block
+
         break;
 
       case 3:
@@ -73,78 +59,70 @@ window.onload = function () {
       case 6:
         params.set("products_by_discount_order", "desc");
         break;
-
-      default:
-      // code block
     }
-    getActivityIndicator();
-    loadData(params);
 
-    // window.location.search = `&${params}`;
+    //finaly, loads the data again
+    loadData();
   });
 };
 
+//an activity indicator is displayed everytime a query is executed, for better user experience
 function getActivityIndicator() {
+  //search for div with .products class and replace the content with an activity indicator
   const element = document.querySelector(".products");
-
   element.innerHTML = `<div class="col-span-full flex justify-center">
   <div
     class="activity border-t-8 border-8 border-lightGrey border-t-pink w-[120px] h-[120px] rounded-full animate-spin justify-center"
   ></div>`;
 }
 
-function getParams() {
-  const queryString = window.location.search;
-  const urlParams = new URLSearchParams(queryString);
-
-  // if (urlParams.get("name")) {
-  //   replaceTitleWithSearch(urlParams.get("name"));
-  // }
-
-  return urlParams;
-}
-
-function replaceTitleWithSearch(title_data) {
+//in case the search bar is used, the title will change
+function replaceTitleWithSearch(title_data = null) {
   const title = document.querySelector(".title");
-  title.innerHTML = `<h2>Resultados de: ${title_data} </h2>`;
+  title.innerHTML = title_data
+    ? `<h2>Resultados de: ${title_data} </h2>`
+    : "<h2>Nuestra colección</h2>";
 }
 
-function loadData(search_params = null) {
+//this function load all the data
+function loadData() {
+  getActivityIndicator();
   const categoriesDropdown = document.querySelector("div#categoriesMenu");
   const categoriesMenu = document.querySelectorAll(".categoriesMenu");
 
   console.log(categoriesMenu);
   const element = document.querySelector(".products");
 
-  products(search_params ? search_params : getParams()).then((posts) => {
-    console.log("Posts: ", posts);
-    const template = getTemplate(posts);
+  //this executed the products query with the actual search params
+  products(params).then((product) => {
+    console.log("Posts: ", product);
+
+    //it gets an html template with all the products, and it's replace the content of the .product div
+    const template = getTemplate(product);
 
     element.innerHTML = template;
 
-    paginationRefresh(posts.meta.current_page);
+    paginationRefresh(product.meta.current_page);
   });
 
+  //same for the category, this one is used for the hover menu and the side category menu
   categories().then((categoriesData) => {
-    console.log("Categories: ", categoriesData.data);
     const template = getCategoryMenu(categoriesData.data);
 
     categoriesDropdown.innerHTML = template;
 
     categoriesMenu.forEach((item) => {
-      console.log("Item: ", item);
       const template = getCategoryMenu(categoriesData.data);
       item.innerHTML = template;
     });
   });
 }
 
+//this get a div for every product, and they are map together in a single column grid, includes even the pagination
 function getTemplate(posts) {
   const rows = posts.data.map(postToRowView).join("");
-  console.log("rows: ", rows);
 
   return `${rows}
-
   <div class="col-span-full justify-self-center">${
     rows ? getPagination(posts) : `<h3> No hay resultados</h3>`
   }</div>
@@ -152,6 +130,7 @@ function getTemplate(posts) {
   `;
 }
 
+//This replace the Next and Prev value from the standard backend pagination with spanish words
 function getLabel(label) {
   switch (label) {
     case "&laquo; Previous":
@@ -163,13 +142,11 @@ function getLabel(label) {
   }
 }
 
+//get the pagination data from the products query, and creates an html with all the availables pages
 function getPagination(products) {
   const links = products.meta.links
     .map((link) => {
-      const urlParams = getParams();
       console.log("label: ", link.label);
-
-      urlParams.set("page", link.url && link.label);
 
       return (
         link.url &&
@@ -187,25 +164,23 @@ function getPagination(products) {
   console.log("links map: ", links);
 
   return `<nav aria-label="Page navigation example">
-    <ul class="pagination">
+    <ul class="pagination  flex-wrap justify-center">
     ${links}
     </ul>
   </nav>`;
 }
 
+//creates a div with every category from the database, and add an "ALL" category
 function getCategoryMenu(categories) {
   const all = `<a href="/" ><div class="${
     !getParams().get("category") && "font-bold text-pink"
   } " >Todo</div></a>`;
-
   const data = all + categories.map(categoriesView).join("");
-
   return `${data} `;
 }
 
+//this creates the single one product div for every product from the query, this uses all its data; name, price, discount and image
 function postToRowView(product) {
-  console.log(product);
-
   const discount = product.discount
     ? `<div class="inline-block absolute bg-pink inset-0 w-[40px] h-[40px] p-2 rounded-full grid place-items-center left-auto" ><h6 class="text-xs text-white font-bold">${product.discount}%</h6></div>`
     : "";
@@ -246,6 +221,7 @@ function postToRowView(product) {
 </div>`;
 }
 
+//it creates an anchor for every category, every href y the same page url, with the category params
 function categoriesView(category) {
   return `
     <a href="?category=${category.id}" ><div class="${
@@ -255,20 +231,20 @@ function categoriesView(category) {
     `;
 }
 
+//get the value for every pagination number displayed, add it to the search params, and ii load the data again, without refreshing the page
 function paginationRefresh(current_page) {
-  console.log("current page: ", current_page);
-  console.log(params);
   var hrefs = document.getElementsByClassName("page-item");
   for (var i = 0; i < hrefs.length; i++) {
     hrefs.item(i).addEventListener("click", function (e) {
-      e.preventDefault(); /*use if you want to prevent the original link following action*/
+      e.preventDefault();
       params.set("page", getPaginationValue(current_page, e.target.text));
-      getActivityIndicator();
+
       loadData(params);
     });
   }
 }
 
+//in case the Next and/or the Prev buttons are available, it calculates the actual value, the current page + or - 1
 function getPaginationValue(current_page, value) {
   switch (value) {
     case "Anterior":
@@ -281,5 +257,25 @@ function getPaginationValue(current_page, value) {
   }
 }
 
+//in case the clear button in clicked in the search form, it removes the text from the form, delete name from the search params, replace the title and load the data without refresh
+function clearSearchBar() {
+  var element = document.getElementById("clear-button");
+
+  element.addEventListener("click", function (e) {
+    document.getElementById("search-keywords").value = "";
+    params.delete("name");
+
+    replaceTitleWithSearch();
+
+    loadData();
+  });
+}
+
+//load the data on load
 loadData();
+
+//add listener to the search form
 searchByName();
+
+//add listener to the clear button
+clearSearchBar();
