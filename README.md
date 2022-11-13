@@ -2,7 +2,7 @@
   <img src="https://img.shields.io/badge/gitmoji-%20😜%20😍-FFDD67.svg?style=flat-square" alt="Gitmoji">
 </a> 
 
-# Project: Ecommerce Test Frontend
+# Proyecto: Ecommerce Test Frontend
 
 Este frontend fue desarrollado solo utilizando javascript, y consumiento las API del backend que se realizó en paralelo.
 
@@ -11,6 +11,9 @@ https://github.com/Lea23VC/ecommerceBackendTest
 
 <b>Link deploy frontend en Vercel:</b>
 https://ecommerce-frontend-test.vercel.app
+
+<b>PDF con documentación: </b>
+El contenido de la documentación (el mismo de este readme) tambien puede encontrarlo [aquí](/documentation.pdf)
 
 ## Recursos utilizados
 
@@ -46,7 +49,7 @@ Para filtrar los productos por categaría, se pueded realizar de dos formas:
 - A través del panel izquierdo al lado de los productos.
 ![](documentation/images/categorias.png)
 
-La categoría actual quedará marcado en negrita y color rosa. Al usar un filtro de categoría, no se hace uso de los filtros actuales ya aplicados, tales como busqueda por nombre, orden segun precio, descuento o paginación.
+La categoría actual quedará marcado en negrita y color rosa. Al usar un filtro de categoría, la paginación vuelve a 1.
 
 ![](/documentation/images/categoria_bebidas.png)
 
@@ -106,9 +109,11 @@ Los archivos principales son:
 
 - src/api/categories.js: Retorna las categorias haciendo consumo de la API.
 - src/api/products.js: Retorna los productos, pudiendo hacer uso opcional de parametros de busqueda, haciendo consumo de la api.
-- src/pages/homepage.js: Archivo principal. Se encarga de renderizar en el html los productos y categorias de forma dinamica. 
+- src/pages/homepage.js: Archivo principal. Obtiene la carga de datos inicial y añade los listener a distintos elementos del html de la página.
 - src/utils/params/paramsUtils.js: Se encarga de tomar los parametros de busqueda desde el navegador, editarlos o borrarlos.
-- src/config/api.js: Archivo de configuración de la API, solo contiene la url del backend, el cual se usa en products.js y categories.js
+- src/config/api.js: Archivo de configuración de la API, solo contiene la url del backend, el cual se usa en products.js y categories.js.
+- src/utils/data/loadData.js: Se encarga de hacer el request a la API con los productos y categorias, haciendo uso tambien de los parametros de busqueda, como nombre, categoria, pagina y orden.
+- src/utils/rendering/*: Estos archivos se encargan de renderizar dinamicamente los elementos de la pagina dependiendo de los datos obtenidos, como el indicador de actividad, las categorias, paginación, y lo mas importante, el grid de productos.
 
 ![](documentation/images/files.png)
 
