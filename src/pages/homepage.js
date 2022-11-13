@@ -95,7 +95,7 @@ window.onload = function () {
     }
 
     //finaly, loads the data again
-    loadData();
+    loadData(false);
   });
 };
 
@@ -127,14 +127,18 @@ function loadData(load_categories = true) {
   const element = document.querySelector(".products");
 
   //this executed the products query with the actual search params
-  products(params).then((product) => {
-    //it gets an html template with all the products, and it's replace the content of the .product div
-    const template = getTemplate(product);
+  products(params)
+    .then((product) => {
+      //it gets an html template with all the products, and it's replace the content of the .product div
+      const template = getTemplate(product);
 
-    element.innerHTML = template;
-
-    paginationRefresh(product.meta.current_page);
-  });
+      element.innerHTML = template;
+      paginationRefresh(product.meta.current_page);
+    })
+    .catch((error) => {
+      element.innerHTML = `<h3>Ha ocurrido un error. Por favor intente nuevamente.</h3>`;
+    })
+    .finally(() => {});
 
   //same for the category, this one is used for the hover menu and the side category menu
   if (load_categories) {
@@ -205,11 +209,11 @@ function getPagination(products) {
 
 //creates a div with every category from the database, and add an "ALL" category
 function getCategoryMenu(categories) {
-  const all = `<div id="${
+  const all = `<a href=""><div id="${
     !getParams().get("category") && "all"
   }" class="category ${
     !getParams().get("category") && "font-bold text-pink active"
-  }" >Todo</div>`;
+  }" >Todo</div></a>`;
   const data = all + categories.map(categoriesView).join("");
   return `${data} `;
 }
@@ -233,7 +237,11 @@ function postToRowView(product) {
   <div class="image-wrapper aspect-square">
     <img
       class="w-[100%] h-auto"
-      src="${product.url_image}"
+      src="${
+        product.url_image
+          ? product.url_image
+          : "/src/images/placeholder-image.webp"
+      }"
     />
   </div>
 
@@ -259,9 +267,9 @@ function postToRowView(product) {
 //it creates an anchor for every category, every href y the same page url, with the category params
 function categoriesView(category) {
   return `
-    <div id="${category.id}" class="category ${
+    <a href=""><div id="${category.id}" class="category ${
     getParams().get("category") == category.id && "active font-bold text-pink"
-  } " >${category.name}</div>
+  } " >${category.name}</div></a>
     
     `;
 }
@@ -274,7 +282,7 @@ function paginationRefresh(current_page) {
       e.preventDefault();
       params.set("page", getPaginationValue(current_page, e.target.text));
 
-      loadData(params);
+      loadData(false);
     });
   }
 }
@@ -299,10 +307,11 @@ function clearSearchBar() {
   element.addEventListener("click", function (e) {
     document.getElementById("search-keywords").value = "";
     params.delete("name");
+    params.delete("page");
 
     replaceTitleWithSearch();
 
-    loadData();
+    loadData(false);
   });
 }
 
