@@ -107,7 +107,7 @@ Los archivos principales son:
 - src/api/categories.js: Retorna las categorias haciendo consumo de la API.
 - src/api/products.js: Retorna los productos, pudiendo hacer uso opcional de parametros de busqueda, haciendo consumo de la api.
 - src/pages/homepage.js: Archivo principal. Se encarga de renderizar en el html los productos y categorias de forma dinamica. 
-- src/utils/paramsUtils.js: Se encarga de tomar los parametros de busqueda desde el navegador, editarlos o borrarlos.
+- src/utils/params/paramsUtils.js: Se encarga de tomar los parametros de busqueda desde el navegador, editarlos o borrarlos.
 - src/config/api.js: Archivo de configuración de la API, solo contiene la url del backend, el cual se usa en products.js y categories.js
 
 ![](documentation/images/files.png)
