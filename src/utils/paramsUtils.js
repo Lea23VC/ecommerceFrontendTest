@@ -6,6 +6,15 @@ export function clearOrder(params) {
 export function clearPage(params) {
   params.delete("page");
 }
+
+export function clearName(params) {
+  params.delete("name");
+}
+
+export function clearCategory(params) {
+  params.delete("category");
+}
+
 export function getParams() {
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);

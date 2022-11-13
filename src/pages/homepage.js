@@ -1,25 +1,31 @@
 import products from "../api/products.js";
 import categories from "../api/categories.js";
-import { getParams, clearOrder, clearPage } from "../utils/paramsUtils.js";
+import {
+  getParams,
+  clearOrder,
+  clearPage,
+  clearName,
+  clearCategory,
+} from "../utils/paramsUtils.js";
 
 //obtain parameters from get request
 const params = getParams();
 
 function searchByName() {
   //get search form
+  var search = document.getElementById("search-keywords");
+
+  //reset search form value on refresh
+
   const select = document.getElementById("form-button");
   select.addEventListener("click", function handlerClick(event) {
-    var search = document.getElementById("search-keywords");
     if (search.value == "") {
       alert("Ingrese algún valor para buscar");
       return false;
     } else {
-      //set name filters in search parameters
       params.set("name", search.value);
       replaceTitleWithSearch(search.value);
-
-      //load data
-      loadData();
+      loadData(false);
     }
   });
 }
@@ -31,9 +37,8 @@ function categoryListener() {
       e.preventDefault();
       console.log(e);
       if (e.target.id != "all") params.set("category", e.target.id);
-      else params.delete("category");
-
-      params.delete("page");
+      else clearCategory(params);
+      clearPage(params);
       loadData(false);
       addActiveCategory();
     });
@@ -57,7 +62,7 @@ function addActiveCategory() {
   }
 }
 
-window.onload = function () {
+function dropdownListener() {
   //get select dropdown
   const select = document.getElementById("form-select");
 
@@ -97,7 +102,7 @@ window.onload = function () {
     //finaly, loads the data again
     loadData(false);
   });
-};
+}
 
 //an activity indicator is displayed everytime a query is executed, for better user experience
 function getActivityIndicator() {
@@ -306,14 +311,17 @@ function clearSearchBar() {
 
   element.addEventListener("click", function (e) {
     document.getElementById("search-keywords").value = "";
-    params.delete("name");
-    params.delete("page");
+    clearName(params);
+    clearPage(params);
 
     replaceTitleWithSearch();
 
     loadData(false);
   });
 }
+
+//add listener to dropdown
+dropdownListener();
 
 //load the data on load
 loadData();
