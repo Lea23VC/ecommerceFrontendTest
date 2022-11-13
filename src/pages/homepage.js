@@ -24,6 +24,39 @@ function searchByName() {
   });
 }
 
+function categoryListener() {
+  var categories = document.getElementsByClassName("category");
+  for (var i = 0; i < categories.length; i++) {
+    categories.item(i).addEventListener("click", function (e) {
+      e.preventDefault();
+      console.log(e);
+      if (e.target.id != "all") params.set("category", e.target.id);
+      else params.delete("category");
+
+      params.delete("page");
+      loadData(false);
+      addActiveCategory();
+    });
+  }
+}
+
+function addActiveCategory() {
+  var categories = document.getElementsByClassName("category");
+  for (var i = 0; i < categories.length; i++) {
+    categories.item(i).classList.remove("active");
+    categories.item(i).classList.remove("font-bold");
+    categories.item(i).classList.remove("text-pink");
+    if (
+      categories.item(i).id === params.get("category") ||
+      (!params.get("category") && categories.item(i).id === "all")
+    ) {
+      categories.item(i).classList.add("active");
+      categories.item(i).classList.add("font-bold");
+      categories.item(i).classList.add("text-pink");
+    }
+  }
+}
+
 window.onload = function () {
   //get select dropdown
   const select = document.getElementById("form-select");
@@ -85,7 +118,7 @@ function replaceTitleWithSearch(title_data = null) {
 }
 
 //this function load all the data
-function loadData() {
+function loadData(load_categories = true) {
   getActivityIndicator();
   const categoriesDropdown = document.querySelector("div#categoriesMenu");
   const categoriesMenu = document.querySelectorAll(".categoriesMenu");
@@ -95,8 +128,6 @@ function loadData() {
 
   //this executed the products query with the actual search params
   products(params).then((product) => {
-    console.log("Posts: ", product);
-
     //it gets an html template with all the products, and it's replace the content of the .product div
     const template = getTemplate(product);
 
@@ -106,25 +137,29 @@ function loadData() {
   });
 
   //same for the category, this one is used for the hover menu and the side category menu
-  categories().then((categoriesData) => {
-    const template = getCategoryMenu(categoriesData.data);
-
-    categoriesDropdown.innerHTML = template;
-
-    categoriesMenu.forEach((item) => {
+  if (load_categories) {
+    console.log("aa");
+    categories().then((categoriesData) => {
       const template = getCategoryMenu(categoriesData.data);
-      item.innerHTML = template;
+
+      categoriesDropdown.innerHTML = template;
+
+      categoriesMenu.forEach((item) => {
+        const template = getCategoryMenu(categoriesData.data);
+        item.innerHTML = template;
+      });
+      categoryListener();
     });
-  });
+  }
 }
 
 //this get a div for every product, and they are map together in a single column grid, includes even the pagination
-function getTemplate(posts) {
-  const rows = posts.data.map(postToRowView).join("");
+function getTemplate(products) {
+  const rows = products.data.map(postToRowView).join("");
 
   return `${rows}
   <div class="col-span-full justify-self-center">${
-    rows ? getPagination(posts) : `<h3> No hay resultados</h3>`
+    rows ? getPagination(products) : `<h3> No hay resultados</h3>`
   }</div>
  
   `;
@@ -161,8 +196,6 @@ function getPagination(products) {
     .toString()
     .replaceAll(",", "");
 
-  console.log("links map: ", links);
-
   return `<nav aria-label="Page navigation example">
     <ul class="pagination  flex-wrap justify-center">
     ${links}
@@ -172,9 +205,11 @@ function getPagination(products) {
 
 //creates a div with every category from the database, and add an "ALL" category
 function getCategoryMenu(categories) {
-  const all = `<a href="/" ><div class="${
-    !getParams().get("category") && "font-bold text-pink"
-  } " >Todo</div></a>`;
+  const all = `<div id="${
+    !getParams().get("category") && "all"
+  }" class="category ${
+    !getParams().get("category") && "font-bold text-pink active"
+  }" >Todo</div>`;
   const data = all + categories.map(categoriesView).join("");
   return `${data} `;
 }
@@ -224,14 +259,14 @@ function postToRowView(product) {
 //it creates an anchor for every category, every href y the same page url, with the category params
 function categoriesView(category) {
   return `
-    <a href="?category=${category.id}" ><div class="${
-    getParams().get("category") == category.id && "font-bold text-pink"
-  } " >${category.name}</div></a>
+    <div id="${category.id}" class="category ${
+    getParams().get("category") == category.id && "active font-bold text-pink"
+  } " >${category.name}</div>
     
     `;
 }
 
-//get the value for every pagination number displayed, add it to the search params, and ii load the data again, without refreshing the page
+//get the value for every pagination number displayed, add it to the search params, and it load the data again, without refreshing the page
 function paginationRefresh(current_page) {
   var hrefs = document.getElementsByClassName("page-item");
   for (var i = 0; i < hrefs.length; i++) {
@@ -279,3 +314,5 @@ searchByName();
 
 //add listener to the clear button
 clearSearchBar();
+
+categoryListener();
